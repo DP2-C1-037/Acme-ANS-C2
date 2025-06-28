@@ -28,7 +28,7 @@ import lombok.Setter;
 @Setter
 @ValidPassenger
 @Table(indexes = {
-	@Index(columnList = "id"), @Index(columnList = "customer_id")
+	@Index(columnList = "passportNumber"), @Index(columnList = "draftMode")
 })
 public class Passenger extends AbstractEntity {
 

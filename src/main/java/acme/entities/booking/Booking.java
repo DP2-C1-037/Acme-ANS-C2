@@ -32,7 +32,7 @@ import lombok.Setter;
 @Setter
 @ValidBooking
 @Table(indexes = {
-	@Index(columnList = "locatorCode"), @Index(columnList = "id")
+	@Index(columnList = "locatorCode"), @Index(columnList = "draftMode"), @Index(columnList = "purchaseMoment"), @Index(columnList = "purchaseMoment, draftMode")
 })
 public class Booking extends AbstractEntity {
 

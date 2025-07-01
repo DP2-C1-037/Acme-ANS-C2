@@ -10,8 +10,5 @@
 
 - Rafael Corchuelo (corchu@us.es)
 - Adrián Chabrera Rubio (adrcharub@alum.us.es)
-- Alejandro González Macías (alegonmac@alum.us.es)
-- Ignacio Gutiérrez Serrera (igngutser@alum.us.es)
-- Miguel Álvarez Raya (migalvray@alum.us.es)
 - Salma El Hakimy (salel@alum.us.es)
 

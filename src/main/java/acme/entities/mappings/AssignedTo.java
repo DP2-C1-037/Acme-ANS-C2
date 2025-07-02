@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(indexes = {
-	@Index(columnList = "booking_id,passenger_id")
+	@Index(columnList = "booking_id"), @Index(columnList = "passenger_id"), @Index(columnList = "booking_id,passenger_id", unique = true)
 })
 public class AssignedTo extends AbstractEntity {
 

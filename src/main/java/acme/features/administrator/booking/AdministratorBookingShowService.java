@@ -28,7 +28,7 @@ public class AdministratorBookingShowService extends AbstractGuiService<Administ
 
 		bookingId = super.getRequest().getData("id", int.class);
 		booking = this.repository.findBookingById(bookingId);
-		status = booking != null && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
+		status = booking != null && !booking.isDraftMode() && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
 
 		super.getResponse().setAuthorised(status);
 	}

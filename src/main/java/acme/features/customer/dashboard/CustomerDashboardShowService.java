@@ -51,16 +51,20 @@ public class CustomerDashboardShowService extends AbstractGuiService<Customer, C
 		Money lastFiveYearsBookingCostsAverage = new Money();
 		Money lastFiveYearsBookingCostsMinimum = new Money();
 		Money lastFiveYearsBookingCostsMaximum = new Money();
-		Double lastFiveYearsBookingCostsStandardDeviation;
+		Money lastFiveYearsBookingCostsStandardDeviation = new Money();
 		Integer bookingsNumberOfPassengersCount;
 		Double bookingsNumberOfPassengersAverage;
 		Integer bookingsNumberOfPassengersMinimum;
 		Integer bookingsNumberOfPassengersMaximum;
 		Double bookingsNumberOfPassengersStandardDeviation;
 
+		// Last five destinations
+
 		Pageable pageable = PageRequest.of(0, 5);
 		List<Flight> lastYearFiveFlights = this.repository.findLastFiveFlights(id, pageable);
 		lastFiveDestinations = lastYearFiveFlights.isEmpty() ? null : lastYearFiveFlights.stream().map(Flight::getDestinationCity).toList();
+
+		// Money spent in bookings during last year
 
 		Date lastYear = MomentHelper.deltaFromCurrentMoment(-1L, ChronoUnit.YEARS);
 		List<Booking> lastYearBookings = this.repository.findDeltaYearBookings(id, lastYear);
@@ -68,6 +72,8 @@ public class CustomerDashboardShowService extends AbstractGuiService<Customer, C
 		Double lastYearMoneySpentInBookingsValue = lastYearBookings.stream().mapToDouble(b -> b.getPrice().getAmount()).sum();
 		lastYearMoneySpentInBookings.setAmount(lastYearMoneySpentInBookingsValue);
 		lastYearMoneySpentInBookings.setCurrency(currencyUsed);
+
+		// Number of bookings grouped by travel class
 
 		List<Object[]> numberOfBookingsAndTravelClasses = this.repository.findNumberOfBookingsByTravelClass(id);
 		if (!numberOfBookingsAndTravelClasses.isEmpty()) {
@@ -80,12 +86,15 @@ public class CustomerDashboardShowService extends AbstractGuiService<Customer, C
 		} else
 			numberOfBookingsByTravelClass = null;
 
+		// Last five year statistics
+
 		Date lastFiveYears = MomentHelper.deltaFromCurrentMoment(-5L, ChronoUnit.YEARS);
 		List<Booking> lastFiveYearBookings = this.repository.findDeltaYearBookings(id, lastFiveYears);
 		lastFiveYearsBookingCostsCount.setCurrency(currencyUsed);
 		lastFiveYearsBookingCostsAverage.setCurrency(currencyUsed);
 		lastFiveYearsBookingCostsMinimum.setCurrency(currencyUsed);
 		lastFiveYearsBookingCostsMaximum.setCurrency(currencyUsed);
+		lastFiveYearsBookingCostsStandardDeviation.setCurrency(currencyUsed);
 		if (!lastFiveYearBookings.isEmpty()) {
 			List<Double> lastFiveYearBookingsPrices = lastFiveYearBookings.stream().map(b -> b.getPrice().getAmount()).collect(Collectors.toList());
 			lastFiveYearsBookingCostsCount.setAmount(lastFiveYearBookingsPrices.stream().mapToDouble(p -> p).sum());
@@ -93,8 +102,9 @@ public class CustomerDashboardShowService extends AbstractGuiService<Customer, C
 			lastFiveYearsBookingCostsMinimum.setAmount(lastFiveYearBookingsPrices.stream().mapToDouble(p -> p).min().getAsDouble());
 			lastFiveYearsBookingCostsMaximum.setAmount(lastFiveYearBookingsPrices.stream().mapToDouble(p -> p).max().getAsDouble());
 			Double lastFiveYearBookingsSquaredSum = lastFiveYearBookingsPrices.stream().mapToDouble(p -> Math.pow(p - lastFiveYearsBookingCostsAverage.getAmount(), 2)).sum();
-			lastFiveYearsBookingCostsStandardDeviation = Math.sqrt(lastFiveYearBookingsSquaredSum / (lastFiveYearBookings.size() - 1));
-			if (lastFiveYearsBookingCostsStandardDeviation.isNaN())
+			lastFiveYearsBookingCostsStandardDeviation.setAmount(Math.sqrt(lastFiveYearBookingsSquaredSum / (lastFiveYearBookings.size() - 1)));
+
+			if (lastFiveYearsBookingCostsStandardDeviation.getAmount().isNaN())
 				lastFiveYearsBookingCostsStandardDeviation = null;
 		} else {
 			lastFiveYearsBookingCostsCount.setAmount(0.);
@@ -103,6 +113,8 @@ public class CustomerDashboardShowService extends AbstractGuiService<Customer, C
 			lastFiveYearsBookingCostsMaximum.setAmount(0.);
 			lastFiveYearsBookingCostsStandardDeviation = null;
 		}
+
+		// Number of passengers statistics
 
 		List<Booking> bookingsFromCustomer = this.repository.findBookingsFromCustomer(id);
 		if (!bookingsFromCustomer.isEmpty()) {

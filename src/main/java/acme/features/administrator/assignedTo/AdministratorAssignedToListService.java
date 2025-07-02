@@ -32,7 +32,7 @@ public class AdministratorAssignedToListService extends AbstractGuiService<Admin
 
 		masterId = super.getRequest().getData("masterId", int.class);
 		booking = this.repository.findBookingById(masterId);
-		status = booking != null && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
+		status = booking != null && !booking.isDraftMode() && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
 
 		super.getResponse().setAuthorised(status);
 	}

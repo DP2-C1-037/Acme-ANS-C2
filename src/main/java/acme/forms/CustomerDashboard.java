@@ -26,7 +26,7 @@ public class CustomerDashboard extends AbstractForm {
 	Money						lastFiveYearsBookingCostsAverage;
 	Money						lastFiveYearsBookingCostsMinimum;
 	Money						lastFiveYearsBookingCostsMaximum;
-	Double						lastFiveYearsBookingCostsStandardDeviation;
+	Money						lastFiveYearsBookingCostsStandardDeviation;
 	Integer						bookingsNumberOfPassengersCount;
 	Double						bookingsNumberOfPassengersAverage;
 	Integer						bookingsNumberOfPassengersMinimum;

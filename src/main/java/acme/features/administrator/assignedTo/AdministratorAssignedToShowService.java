@@ -28,7 +28,7 @@ public class AdministratorAssignedToShowService extends AbstractGuiService<Admin
 
 		assignedToId = super.getRequest().getData("id", int.class);
 		assignedTo = this.repository.findAssignedToById(assignedToId);
-		status = assignedTo != null && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
+		status = assignedTo != null && !assignedTo.getBooking().isDraftMode() && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
 
 		super.getResponse().setAuthorised(status);
 	}

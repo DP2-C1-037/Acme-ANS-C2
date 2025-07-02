@@ -91,11 +91,11 @@ public class CustomerBookingPublishService extends AbstractGuiService<Customer, 
 		}
 		{
 			boolean allPassengersPublished;
-			Collection<Passenger> bookingDraftModePassengers;
+			Collection<Passenger> bookingPassengers;
 
-			bookingDraftModePassengers = this.repository.findAllDraftModePassengersFromBookingById(booking.getId());
+			bookingPassengers = this.repository.findAllPassengersFromBookingById(booking.getId());
 
-			allPassengersPublished = bookingDraftModePassengers.isEmpty();
+			allPassengersPublished = bookingPassengers.stream().allMatch(p -> !p.isDraftMode());
 
 			super.state(allPassengersPublished, "*", "acme.validation.booking.passengersPublished.message");
 

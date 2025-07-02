@@ -7,6 +7,7 @@ import acme.client.components.models.Dataset;
 import acme.client.components.principals.Administrator;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
+import acme.entities.booking.Booking;
 import acme.entities.mappings.AssignedTo;
 
 @GuiService
@@ -25,10 +26,12 @@ public class AdministratorAssignedToShowService extends AbstractGuiService<Admin
 		boolean status;
 		int assignedToId;
 		AssignedTo assignedTo;
+		Booking booking;
 
 		assignedToId = super.getRequest().getData("id", int.class);
 		assignedTo = this.repository.findAssignedToById(assignedToId);
-		status = assignedTo != null && !assignedTo.getBooking().isDraftMode() && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
+		booking = assignedTo == null ? null : assignedTo.getBooking();
+		status = assignedTo != null && !booking.isDraftMode() && super.getRequest().getPrincipal().hasRealmOfType(Administrator.class);
 
 		super.getResponse().setAuthorised(status);
 	}
